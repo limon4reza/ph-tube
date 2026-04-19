@@ -6,15 +6,37 @@ function loadCategories() {
         .then(data => displayCategories(data.categories)) // send data to displayCategories function
 }
 
+
+function loadVideos() {
+    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+        .then(response => response.json())
+        .then(data => displayVideos(data.videos))
+}
+
+
+
+const loadCategoryVideos = (id) => {
+    // console.log(id);
+    const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
+    console.log(url);
+    fetch(url)
+        .then(res => res.json())
+        .then(data => displayVideos(data.category))
+}
+
+
+
 // category_id":"1001","category":"Music
 
 function displayCategories(categories) {
     const categoryContainer = document.getElementById('category-container');
 
     for (let category of categories) {
+
         const categoryDiv = document.createElement('div');
         categoryDiv.innerHTML = `
-        <button class="btn btn-sm bg-[#25252515] hover:bg-[#FF1F3D] hover:text-white text-[#25252590]">
+        
+        <button onclick="loadCategoryVideos('${category.category_id}')" class="btn btn-sm bg-[#25252515] hover:bg-[#FF1F3D] hover:text-white text-[#25252590]">
         ${category.category}</button>
         `;
         categoryContainer.appendChild(categoryDiv);
@@ -57,18 +79,16 @@ function displayCategories(categories) {
 
 
 // load videos
-function loadVideos() {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
-        .then(response => response.json())
-        .then(data => displayVideos(data.videos))
-}
+
 
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById("video-container");
 
+    videoContainer.innerHTML = ""; // Clear previous videos
+
     videos.forEach((video) => {
-        console.log(video)
+        // console.log(video)
 
         const videoCard = document.createElement("div");
 
@@ -110,6 +130,11 @@ const displayVideos = (videos) => {
 
     });
 }
+
+
+
+
+
 
 // getHoursAgo();
 loadCategories();
